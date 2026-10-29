@@ -21,6 +21,10 @@ const getPool = () => {
 }
 
 const connectDB = async () => {
+  if (connected) {
+    return getPool()
+  }
+
   try {
     const database = getPool()
     await database.query('SELECT 1')

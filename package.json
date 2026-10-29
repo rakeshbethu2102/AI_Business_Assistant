@@ -2,6 +2,7 @@
   "name": "ai-business-intelligence-assistant",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "workspaces": [
     "client",
     "server"

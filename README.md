@@ -88,6 +88,59 @@ URLs:
 - Backend: http://localhost:5000
 - Health: http://localhost:5000/api/health
 
+## Deploy to Vercel
+
+This repository is configured as a single Vercel project:
+
+- The React/Vite frontend is built from `client/` into `client/dist`.
+- The Express API is exposed through the serverless function in `api/index.js`.
+- `/api/*` requests are routed to Express, and all other routes fall back to the React app.
+
+Production deployment: [AI Business Intelligence Assistant](https://ai-business-intelligence-assistant-n9i8mr750.vercel.app/)
+
+### 1. Import the repository
+
+1. Push the repository to GitHub.
+2. In Vercel, choose **Add New Project** and import the repository.
+3. Keep the repository root as the project root.
+4. Leave the detected build settings unchanged. The committed `vercel.json` supplies:
+   - Build command: `npm run build`
+   - Output directory: `client/dist`
+
+### 2. Add production environment variables
+
+In **Project Settings > Environment Variables**, add these variables for Production (and Preview if needed):
+
+```env
+MYSQL_HOST=your-mysql-host
+MYSQL_PORT=3306
+MYSQL_USER=your-mysql-user
+MYSQL_PASSWORD=your-mysql-password
+MYSQL_DATABASE=ai_bi_assistant
+JWT_SECRET=replace-with-a-long-random-secret
+CLIENT_URL=https://your-project.vercel.app
+```
+
+Use a MySQL provider that allows connections from Vercel and permits remote TLS connections when required by that provider. Do not upload `.env` files or commit production credentials.
+
+### 3. Deploy and verify
+
+Deploy from the Vercel dashboard or with the Vercel CLI:
+
+```bash
+npx vercel
+npx vercel --prod
+```
+
+Verify the API and frontend after deployment:
+
+```text
+https://ai-business-intelligence-assistant-n9i8mr750.vercel.app/api/health
+https://ai-business-intelligence-assistant-n9i8mr750.vercel.app/
+```
+
+The database tables are created automatically when the API receives its first request. The bundled CSV remains available as a read-only fallback for dashboard queries, but MySQL is required for authentication and CSV imports.
+
 ## Data Import
 
 Import the bundled CSV:
@@ -177,5 +230,3 @@ npm --prefix client run build
 ```
 
 Tests cover total revenue, regions, top products, empty questions, destructive requests, aliases, grouped breakdowns, rankings, comparisons, statuses, average order value, and unsupported forecasting.
-
-

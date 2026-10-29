@@ -29,12 +29,16 @@ app.use('/api/dashboard', dashboardRoutes)
 app.use(notFound)
 app.use(errorHandler)
 
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`)
+if (!process.env.VERCEL) {
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`Server running on http://localhost:${PORT}`)
+      })
     })
-  })
-  .catch((error) => {
-    console.error('Failed to start server:', error)
-  })
+    .catch((error) => {
+      console.error('Failed to start server:', error)
+    })
+}
+
+export default app
